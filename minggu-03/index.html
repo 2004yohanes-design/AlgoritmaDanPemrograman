@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Antrian</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: hsl(276, 87%, 47%);
+      margin: 0;
+    }
+    .container {
+      background: hsl(0, 94%, 36%);
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 400px;
+    }
+    h1 {
+      color: #dae410;
+      margin-bottom: 15px;
+    }
+    input {
+      padding: 8px;
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:nth-child(2) {
+      background: #3498db;
+      color: white;
+    }
+    button:nth-child(3) {
+      background: #e67e22;
+      color: white;
+    }
+    #daftarAntrian, #sedangDilayani, #sudahDilayani {
+      margin-top: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: #ecf0f1;
+      min-height: 30px;
+      text-align: left;
+    }
+    .antrian-item {
+      padding: 5px;
+      margin: 3px 0;
+      background: #dff9fb;
+      border-radius: 5px;
+    }
+    .dilayani-item {
+      padding: 5px;
+      margin: 3px 0;
+      background: #ffeaa7;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sistem Antrian</h1>
+
+    <input type="text" id="namaInput" placeholder="Masukkan nama">
+    <br>
+    <button onclick="tambahAntrian()">Tambah Antrian</button>
+    <button onclick="panggilAntrian()">Panggil Antrian</button>
+
+    <h2>Daftar Antrian</h2>
+    <div id="daftarAntrian">Kosong</div>
+
+    <h2>Sedang Dilayani</h2>
+    <div id="sedangDilayani">Belum ada</div>
+
+    <h2>Sudah Dilayani</h2>
+    <div id="sudahDilayani">Belum ada</div>
+  </div>
+
+  <script>
+    class Queue {
+      constructor() {
+        this.items = [];
+      }
+      enqueue(item) {
+        this.items.push(item);
+      }
+      dequeue() {
+        if (this.isEmpty()) return null;
+        return this.items.shift();
+      }
+      isEmpty() {
+        return this.items.length === 0;
+      }
+      getAll() {
+        return this.items;
+      }
+    }
+
+    let antrian = new Queue();
+    let nomorUrut = 0;
+    let sudahDilayani = [];
+
+    function updateDaftarAntrian() {
+      let daftar = document.getElementById("daftarAntrian");
+      if (antrian.isEmpty()) {
+        daftar.innerHTML = "<i>Kosong</i>";
+      } else {
+        daftar.innerHTML = antrian.getAll()
+          .map(item => `<div class="antrian-item">No. ${item.no} - ${item.nama}</div>`)
+          .join("");
+      }
+    }
+
+    function updateSudahDilayani() {
+      let daftar = document.getElementById("sudahDilayani");
+      if (sudahDilayani.length === 0) {
+        daftar.innerHTML = "<i>Belum ada</i>";
+      } else {
+        daftar.innerHTML = sudahDilayani
+          .map(item => `<div class="dilayani-item">No. ${item.no} - ${item.nama}</div>`)
+          .join("");
+      }
+    }
+
+    function tambahAntrian() {
+      let nama = document.getElementById("namaInput").value.trim();
+      if (nama === "") {
+        alert("Nama tidak boleh kosong!");
+        return;
+      }
+      nomorUrut++;
+      antrian.enqueue({ no: nomorUrut, nama: nama });
+      document.getElementById("namaInput").value = "";
+      updateDaftarAntrian();
+    }
+
+    function panggilAntrian() {
+      let orang = antrian.dequeue();
+      if (orang === null) {
+        alert("Tidak ada antrian!");
+      } else {
+        document.getElementById("sedangDilayani").innerText = `No. ${orang.no} - ${orang.nama}`;
+        sudahDilayani.push(orang); // simpan ke daftar sudah dilayani
+        updateDaftarAntrian();
+        updateSudahDilayani();
+      }
+    }
+
+    // inisialisasi tampilan
+    updateDaftarAntrian();
+    updateSudahDilayani();
+  </script>
+</body>
+</html>
