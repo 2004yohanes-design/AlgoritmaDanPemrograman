@@ -3,103 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Antrian</title>
+  <title>Sistem Antrian Puskesmas</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: hsl(276, 87%, 47%);
-      margin: 0;
+      background: #f0f8ff;
+      padding: 20px;
     }
-    .container {
-      background: hsl(0, 94%, 36%);
-      padding: 20px 30px;
+    h1 {
+      text-align: center;
+      color: #006400;
+    }
+    .form {
+      margin: 20px auto;
+      padding: 15px;
+      border: 2px solid #006400;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      background: #e6ffe6;
       text-align: center;
       width: 400px;
     }
-    h1 {
-      color: #dae410;
-      margin-bottom: 15px;
-    }
-    input {
-      padding: 8px;
-      width: 70%;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+    .form input, .form select {
+      padding: 5px;
+      margin: 5px;
     }
     button {
-      padding: 8px 12px;
+      padding: 6px 12px;
       margin: 5px;
+      background: #006400;
+      color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      font-weight: bold;
     }
-    button:nth-child(2) {
-      background: #3498db;
-      color: white;
+    button:hover {
+      background: #228b22;
     }
-    button:nth-child(3) {
-      background: #e67e22;
-      color: white;
+    .poli-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 20px;
     }
-    #daftarAntrian, #sedangDilayani, #sudahDilayani {
-      margin-top: 15px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: #ecf0f1;
-      min-height: 30px;
-      text-align: left;
+    .antrian {
+      flex: 1 1 300px;
+      margin: 10px;
+      padding: 15px;
+      border: 2px solid #006400;
+      border-radius: 10px;
+      background: #ffffff;
+    }
+    .antrian h3 {
+      margin-top: 0;
+      color: #006400;
     }
     .antrian-item {
       padding: 5px;
-      margin: 3px 0;
-      background: #dff9fb;
-      border-radius: 5px;
+      border-bottom: 1px solid #ddd;
     }
-    .dilayani-item {
-      padding: 5px;
-      margin: 3px 0;
-      background: #ffeaa7;
-      border-radius: 5px;
+    .selesai {
+      margin-top: 30px;
+      padding: 15px;
+      border: 2px solid #8b0000;
+      border-radius: 10px;
+      background: #ffe6e6;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Sistem Antrian</h1>
+  <h1>Sistem Antrian Puskesmas</h1>
 
-    <input type="text" id="namaInput" placeholder="Masukkan nama">
-    <br>
-    <button onclick="tambahAntrian()">Tambah Antrian</button>
-    <button onclick="panggilAntrian()">Panggil Antrian</button>
+  <div class="form">
+    <input type="text" id="nama" placeholder="Masukkan Nama Pasien">
+    <select id="poli">
+      <option value="Poli Umum">Poli Umum</option>
+      <option value="Poli Gigi">Poli Gigi</option>
+      <option value="Poli Anak">Poli Anak</option>
+      <option value="Poli Lansia">Poli Lansia</option>
+      <option value="Poli KIA">Poli KIA</option>
+    </select>
+    <button onclick="tambahAntrian()">Ambil Antrian</button>
+    <button onclick="resetAntrian()">Reset Semua</button>
+  </div>
 
-    <h2>Daftar Antrian</h2>
-    <div id="daftarAntrian">Kosong</div>
+  <div class="poli-container">
+    <div class="antrian">
+      <h3>Poli Umum</h3>
+      <div id="antrian-Poli Umum"><i>Kosong</i></div>
+      <button onclick="panggil('Poli Umum')">Panggil</button>
+    </div>
+    <div class="antrian">
+      <h3>Poli Gigi</h3>
+      <div id="antrian-Poli Gigi"><i>Kosong</i></div>
+      <button onclick="panggil('Poli Gigi')">Panggil</button>
+    </div>
+    <div class="antrian">
+      <h3>Poli Anak</h3>
+      <div id="antrian-Poli Anak"><i>Kosong</i></div>
+      <button onclick="panggil('Poli Anak')">Panggil</button>
+    </div>
+    <div class="antrian">
+      <h3>Poli Lansia</h3>
+      <div id="antrian-Poli Lansia"><i>Kosong</i></div>
+      <button onclick="panggil('Poli Lansia')">Panggil</button>
+    </div>
+    <div class="antrian">
+      <h3>Poli KIA</h3>
+      <div id="antrian-Poli KIA"><i>Kosong</i></div>
+      <button onclick="panggil('Poli KIA')">Panggil</button>
+    </div>
+  </div>
 
-    <h2>Sedang Dilayani</h2>
-    <div id="sedangDiproses">Belum ada</div>
-
-    <h2>Sudah Dilayani</h2>
-    <div id="sudahDilayani">Belum ada</div>
+  <div class="selesai">
+    <h3>Daftar Pasien Selesai Diperiksa</h3>
+    <div id="pasienSelesai"><i>Belum ada</i></div>
   </div>
 
   <script>
     class Queue {
       constructor() {
         this.items = [];
+        this.counter = 1;
       }
-      enqueue(item) {
-        this.items.push(item);
+      enqueue(nama, poli) {
+        this.items.push({ no: this.counter++, nama, poli });
       }
       dequeue() {
-        if (this.isEmpty()) return null;
         return this.items.shift();
       }
       isEmpty() {
@@ -108,14 +137,26 @@
       getAll() {
         return this.items;
       }
+      reset() {
+        this.items = [];
+        this.counter = 1;
+      }
     }
 
-    let antrian = new Queue();
-    let nomorUrut = 0;
-    let sudahDilayani = [];
+    // Antrian per poli
+    let antrianPoli = {
+      "Poli Umum": new Queue(),
+      "Poli Gigi": new Queue(),
+      "Poli Anak": new Queue(),
+      "Poli Lansia": new Queue(),
+      "Poli KIA": new Queue()
+    };
 
-    function updateDaftarAntrian() {
-      let daftar = document.getElementById("daftarAntrian");
+    let pasienSelesai = [];
+
+    function updateAntrian(poli) {
+      let daftar = document.getElementById("antrian-" + poli);
+      let antrian = antrianPoli[poli];
       if (antrian.isEmpty()) {
         daftar.innerHTML = "<i>Kosong</i>";
       } else {
@@ -125,44 +166,57 @@
       }
     }
 
-    function updateSudahDilayani() {
-      let daftar = document.getElementById("sudahDilayani");
-      if (sudahDilayani.length === 0) {
-        daftar.innerHTML = "<i>Belum ada</i>";
+    function updatePasienSelesai() {
+      let selesai = document.getElementById("pasienSelesai");
+      if (pasienSelesai.length === 0) {
+        selesai.innerHTML = "<i>Belum ada</i>";
       } else {
-        daftar.innerHTML = sudahDilayani
-          .map(item => `<div class="dilayani-item">No. ${item.no} - ${item.nama}</div>`)
+        selesai.innerHTML = pasienSelesai
+          .map(item => `<div class="antrian-item">No. ${item.no} - ${item.nama} (${item.poli})</div>`)
           .join("");
       }
     }
 
     function tambahAntrian() {
-      let nama = document.getElementById("namaInput").value.trim();
-      if (nama === "") {
-        alert("Nama tidak boleh kosong!");
+      let nama = document.getElementById("nama").value;
+      let poli = document.getElementById("poli").value;
+      if (nama.trim() === "") {
+        alert("Nama pasien harus diisi!");
         return;
       }
-      nomorUrut++;
-      antrian.enqueue({ no: nomorUrut, nama: nama });
-      document.getElementById("namaInput").value = "";
-      updateDaftarAntrian();
+      antrianPoli[poli].enqueue(nama, poli);
+      document.getElementById("nama").value = "";
+      updateAntrian(poli);
     }
 
-    function panggilAntrian() {
-      let orang = antrian.dequeue();
-      if (orang === null) {
-        alert("Tidak ada antrian!");
+    function panggil(poli) {
+      let orang = antrianPoli[poli].dequeue();
+      if (orang === null || orang === undefined) {
+        alert("Tidak ada antrian di " + poli);
       } else {
-        document.getElementById("sedangDilayani").innerText = `No. ${orang.no} - ${orang.nama}`;
-        sudahDilayani.push(orang); // simpan ke daftar sudah dilayani
-        updateDaftarAntrian();
-        updateSudahDilayani();
+        alert(`Memanggil: No. ${orang.no} - ${orang.nama} (${orang.poli})`);
+        pasienSelesai.push(orang);
+        updateAntrian(poli);
+        updatePasienSelesai();
       }
     }
 
-    // inisialisasi tampilan
-    updateDaftarAntrian();
-    updateSudahDilayani();
+    function resetAntrian() {
+      if (confirm("Apakah Anda yakin ingin menghapus semua antrian?")) {
+        for (let poli in antrianPoli) {
+          antrianPoli[poli].reset();
+          updateAntrian(poli);
+        }
+        pasienSelesai = [];
+        updatePasienSelesai();
+      }
+    }
+
+    // Inisialisasi awal
+    for (let poli in antrianPoli) {
+      updateAntrian(poli);
+    }
+    updatePasienSelesai();
   </script>
 </body>
 </html>
